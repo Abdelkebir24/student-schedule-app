@@ -6,6 +6,7 @@ import Login from "../pages/login";
 import Courses from "../pages/Courses";
 import Schedule from "../pages/Schedule";
 import Register from "../pages/Register";
+import Assignments from "../pages/Assignments";
 
 function Router() {
 
@@ -25,6 +26,7 @@ function Router() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/courses" element={<Courses />} />
           <Route path="/schedule" element={<Schedule />} />
+          <Route path="/assignments" element={<Assignments />} />
       </Route>
 
       <Route path="/" element={<Navigate to="/login" />} />

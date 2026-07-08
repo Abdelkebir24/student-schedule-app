@@ -8,6 +8,7 @@ use Illuminate\Validation\Rule;
 
 class AssignmentController extends Controller
 {
+    // ------------ index
     public function index(Request $request)
     {
         $userId = $request->user()->id;
@@ -91,8 +92,6 @@ class AssignmentController extends Controller
             'message' => 'Assignment deleted successfully'
         ], 200);
     }
-
-
 }
 
 

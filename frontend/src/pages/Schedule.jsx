@@ -53,7 +53,6 @@ function Schedule() {
     // handleSubmit function 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
         try {
             const response = await api.post("/schedules", formData);
             fetchSchedulesAndCourses();

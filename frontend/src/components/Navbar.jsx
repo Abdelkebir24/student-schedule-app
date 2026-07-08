@@ -49,6 +49,15 @@ export default function Navbar() {
                         >
                             Schedule
                         </NavLink>
+
+                        <NavLink 
+                            to="/assignments" 
+                            className={({isActive}) => 
+                                `text-sm text-gray-500 pb-0.5 hover:text-gray-900 transition-colors border-b-2 ${isActive ? 'border-gray-500 ' : 'border-transparent'}`
+                            }
+                        >
+                            Assignments
+                        </NavLink>
                     </div>
                     
                     {/* logout button  */}
@@ -97,6 +106,16 @@ export default function Navbar() {
                          onClick={() => setIsOpen(false)}
                     >
                         Schedule
+                    </NavLink>
+
+                    <NavLink 
+                        to="/assignments" 
+                        className={({isActive}) => 
+                            `text-sm text-gray-500 pb-0.5 hover:text-gray-900 transition-colors border-b-2 ${isActive ? 'border-gray-500 ' : 'border-transparent'}`
+                        }
+                         onClick={() => setIsOpen(false)}
+                    >
+                        Assignments
                     </NavLink>
 
                     <a 
