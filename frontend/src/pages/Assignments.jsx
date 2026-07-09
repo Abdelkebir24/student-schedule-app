@@ -135,18 +135,15 @@ function Assignments() {
                                             <input 
                                                 type="checkbox" 
                                                 checked={assignment.status === "done"}
-                                                onClick={() => handleToggleStatus(assignment.id)}
+                                                onChange={() => handleToggleStatus(assignment.id)}
                                             />
                                             <div>
-                                                <h2 className="font-bold text-lg">{assignment.title}</h2>
+                                                <h2 className={`font-bold text-lg ${assignment.status === "done" ? "text-gray-400 line-through" : ""}`}>{assignment.title}</h2>
                                                 <p className="text-sm text-gray-500">{assignment.course.name} . {assignment.due_date}</p>
                                             </div>
                                         </div>
 
                                         <div className="flex itmes-center gap-3">
-                                            <button className="text-sm text-blue-600 underline cursor-pointer">
-                                                Edit
-                                            </button>
                                             <button 
                                                 className="text-sm text-red-600 underline cursor-pointer"
                                                 onClick={() => handleDelete(assignment.id)}
