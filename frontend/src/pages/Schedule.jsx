@@ -109,7 +109,7 @@ function Schedule() {
                             </button>
                         </div>
                         {/* schedule  */}
-                        <div className="grid grid-cols-6 border  border-gray-300">
+                        <div className="grid grid-cols-1 md:grid-cols-6 border  border-gray-300 ">
                             {days.map((d, i) => 
                                 <div key={i} className="border border-gray-300">
                                     <h2 className="bg-gray-500 text-center text-white font-lg py-2 ">{d}</h2>
