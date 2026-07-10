@@ -1,8 +1,8 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import Layout from "../components/layout";
+import Layout from "../components/Layout";
 import Dashboard from "../pages/dashboard";
 import { useAuth } from "../context/AuthContext";
-import Login from "../pages/login";
+import Login from "../pages/Login";
 import Courses from "../pages/Courses";
 import Schedule from "../pages/Schedule";
 import Register from "../pages/Register";
