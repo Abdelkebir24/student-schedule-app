@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import api from "../api/axios";
-
+import { Plus, Pencil, Trash2, BookOpen } from "lucide-react";
 
 function Courses() {
 
@@ -12,18 +12,14 @@ function Courses() {
         name: "",
         code: "",
         professor: "",
-        // default color 
-        color: "#fdfdfd",
+        color: "#3B82F6",
     });
 
-    // fetchCourses function 
     const fetchCourses = async () => {
             try {
                 setLoading(true);
                 const response = await api.get("/courses");
                 setCourses(response.data);
-                console.log("from courses api");
-                console.log(response.data);
             } catch (error) {
                 console.error(error)
             } finally {
@@ -31,17 +27,14 @@ function Courses() {
             }
     }
 
-    // start useEffect 
     useEffect(() => {
         fetchCourses();
     }, [])
-    // end useEffect 
 
-    // handleDelete function 
     const handleDelete = async (id) => {
         try {
-            if(confirm("Are you sure?")) {
-                const response = await api.delete(`/courses/${id}`);
+            if(confirm("Delete this course?")) {
+                await api.delete(`/courses/${id}`);
                 fetchCourses();
             }
         } catch (error) {
@@ -49,25 +42,14 @@ function Courses() {
         }
     }
 
-    // handleChange function 
     const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
+        setFormData({ ...formData, [e.target.name]: e.target.value });
     }
 
-    // resetForm Function
     const resetForm = () => {
-        setFormData({
-            name: "",
-            code: "",
-            professor: "",
-            color: "#fdfdfd",
-        })
+        setFormData({ name: "", code: "", professor: "", color: "#3B82F6" })
     }
 
-    // resetFormWithfetchCoursesAndSetShowFormCourseAndSetEditingId function 
     const resetAndRefresh = () => {
         fetchCourses();
         resetForm();
@@ -75,29 +57,20 @@ function Courses() {
         setShowFormCourse(false);
     }
 
-    // handleSubmit - name, code, professor, color 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (editingId) {
-            try {
-                const response = await api.put(`/courses/${editingId}`, formData);
-                resetAndRefresh();
-            } catch (error) {
-                console.error(error);
+        try {
+            if (editingId) {
+                await api.put(`/courses/${editingId}`, formData);
+            } else {
+                await api.post("/courses", formData);
             }
-        }
-        else {
-            try {
-                const response = await api.post("/courses", formData);
-                resetAndRefresh();
-            } catch (error) {
-                console.log(error);
-            }
+            resetAndRefresh();
+        } catch (error) {
+            console.error(error);
         }
     }
 
-    // handleEdit function 
     const handleEdit = (course) => {
         setEditingId(course.id);
         setFormData({
@@ -109,167 +82,139 @@ function Courses() {
         setShowFormCourse(true);
     }
 
-    // handleCancelForm function 
     const handleCancelForm = () => {
         resetForm();
         setEditingId(null);
         setShowFormCourse(false);
     }
 
-    // ----- loading
     if (loading) {
-        return (
-            <p>Loading ...</p>
-        )
+        return <p className="text-sm text-gray-400">Loading...</p>
     }
 
     return (
         <div>
 
-            {/* start courses cards  */}
             {!showFormCourse && ( courses.length === 0 ? 
-                <div className="flex items-center space-x-3 mt-3">
-                    <h3 className="text-lg font-bold text-gray-400">No courses yet — </h3>
+                <div className="flex flex-col items-center justify-center py-20 text-center">
+                    <BookOpen className="w-8 h-8 text-gray-300 mb-3" />
+                    <h3 className="text-[15px] font-medium text-gray-900 mb-1">No courses yet</h3>
+                    <p className="text-[13px] text-gray-500 mb-4">Add your courses to start building your schedule.</p>
                     <button 
-                        className="text-blue-500 border-b-2 text-sm hover:text-blue-400 transition-colors"
+                        className="flex items-center gap-1.5 text-sm text-white bg-blue-500 px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
                         onClick={() => setShowFormCourse(true)} 
                     >
-                        add your first one!
+                        <Plus className="w-4 h-4" /> Add course
                     </button>
                 </div>
             :<div>
-                <div className="flex justify-between items-center px-3">
-                    <h3 className="text-lg font-bold text-gray-400">My Courses 📖📘</h3>
-                    <button onClick={() => setShowFormCourse(true)} className="text-white bg-blue-500 px-3 py-2 rounded-lg text-sm hover:bg-blue-400 transition-colors">
-                        Add new course
+                <div className="flex justify-between items-center mb-5">
+                    <h3 className="text-[15px] font-medium text-gray-900">My courses</h3>
+                    <button 
+                        onClick={() => setShowFormCourse(true)} 
+                        className="flex items-center gap-1.5 text-sm text-white bg-blue-500 px-3.5 py-2 rounded-md hover:bg-blue-600 transition-colors"
+                    >
+                        <Plus className="w-4 h-4" /> Add course
                     </button>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-2 py-4 mt-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                     {
-                        courses.map(((c) => (
+                        courses.map((c) => (
                             <CoursesCards 
                                 key={c.id} 
                                 course={c} 
                                 handleEdit={handleEdit} 
                                 handleDelete={handleDelete} 
-                            />))
-                        ) 
+                            />
+                        ))
                     }
                 </div>
             </div>)}
-            {/* end courses cards  */}
             
 
-            {/* start add course form  */}
-            {showFormCourse && <form onSubmit={handleSubmit}>
-                <div className="rounded-lg px-5 py-4">
-                    {/* <!-- title  --> */}
-                    <h1 className="text-3xl font-bold text-gray-500 my-3">Course Form</h1>
+            {showFormCourse && <form onSubmit={handleSubmit} className="max-w-md">
+                <h1 className="text-[15px] font-medium text-gray-900 mb-5">{editingId ? "Edit course" : "New course"}</h1>
 
-                    <div className="my-4 grid grid-cols-1 gap-4">
-                        {/* <!-- name  --> */}
-                        <div className="mb-3">
-                            <label className="text-sm text-gray-500 block mb-1" htmlFor="name">Course Name</label>
-                            <input 
-                                className="px-2 py-1 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400" 
-                                type="text" 
-                                name="name" 
-                                id="name" 
-                                value={formData.name}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-
-                        {/* <!-- code  --> */}
-                        <div className="mb-3">
-                            <label className="text-sm text-gray-500 block mb-1" htmlFor="code">Code</label>
-                            <input 
-                                className="px-2 py-1 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400" 
-                                type="text" 
-                                name="code" 
-                                id="code"
-                                value={formData.code}
-                                onChange={handleChange} 
-                                required
-                            />
-                        </div>
-
-                        {/* <!-- professor  --> */}
-                        <div className="mb-3">
-                            <label className="text-sm text-gray-500 block mb-1" htmlFor="professor">Professor</label>
-                            <input 
-                                className="px-2 py-1 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400" 
-                                type="text" 
-                                name="professor" 
-                                id="professor"
-                                value={formData.professor}
-                                onChange={handleChange} 
-                                required
-                            />
-                        </div>
-
-                        {/* <!-- color  --> */}
-                        <div className="mb-3">
-                            <label className="text-sm text-gray-500 block mb-1" htmlFor="color">Color</label>
-                            <input 
-                                className="border border-gray-300 w-16 h-8" 
-                                type="color" 
-                                name="color" 
-                                id="color"
-                                value={formData.color}
-                                onChange={handleChange} 
-                                required
-                            />
-                        </div>
-
+                <div className="space-y-4 mb-6">
+                    <div>
+                        <label className="text-[13px] text-gray-500 block mb-1" htmlFor="name">Course name</label>
+                        <input 
+                            className="px-3 py-2 w-full text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400" 
+                            type="text" name="name" id="name" placeholder="Mathematics"
+                            value={formData.name} onChange={handleChange} required
+                        />
                     </div>
 
-                    {/* <!-- submit and cancel buttons  --> */}
-                    <div className="flex justify-start items-center gap-10">
-                        <button 
-                            className="px-4 rounded-lg bg-blue-500 hover:bg-blue-600 active:scale-95 transition-all py-2 text-white mb-3"
-                            type="submit"
-                        >
-                            {editingId ? "Update" : "Add new course"}
-                        </button>
+                    <div>
+                        <label className="text-[13px] text-gray-500 block mb-1" htmlFor="code">Code</label>
+                        <input 
+                            className="px-3 py-2 w-full text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400" 
+                            type="text" name="code" id="code" placeholder="MATH101"
+                            value={formData.code} onChange={handleChange} required
+                        />
+                    </div>
 
-                        <span 
-                            className="text-red-500 hover:text-red-400 border-b-1 active:scale-95 transition-all mb-3 cursor-pointer"
-                            onClick={handleCancelForm} 
-                        >
-                            Cancel
-                        </span>
+                    <div>
+                        <label className="text-[13px] text-gray-500 block mb-1" htmlFor="professor">Professor</label>
+                        <input 
+                            className="px-3 py-2 w-full text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400" 
+                            type="text" name="professor" id="professor" placeholder="Dr. Smith"
+                            value={formData.professor} onChange={handleChange} required
+                        />
+                    </div>
+
+                    <div>
+                        <label className="text-[13px] text-gray-500 block mb-1" htmlFor="color">Color</label>
+                        <input 
+                            className="border border-gray-300 rounded-md w-14 h-9" 
+                            type="color" name="color" id="color"
+                            value={formData.color} onChange={handleChange} required
+                        />
                     </div>
                 </div>
+
+                <div className="flex items-center gap-3">
+                    <button 
+                        className="px-4 rounded-md bg-blue-500 hover:bg-blue-600 active:scale-95 transition-all py-2 text-sm font-medium text-white"
+                        type="submit"
+                    >
+                        {editingId ? "Save changes" : "Add course"}
+                    </button>
+
+                    <button 
+                        type="button"
+                        className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
+                        onClick={handleCancelForm} 
+                    >
+                        Cancel
+                    </button>
+                </div>
             </form>}
-            {/* end add course form  */}
         </div>
         
     )
 }
 
-// courses cards component 
 const CoursesCards = ({course, handleEdit, handleDelete}) => {
     return (
         <div 
-            className="py-4 px-4 rounded-lg shadow-sm hover:shadow-lg cursor-pointer transition-shadow"
-            key={course.id}
+            className="bg-white border border-gray-200 rounded-lg p-4 hover:border-gray-300 transition-colors border-l-4"
+            style={{ borderLeftColor: course.color }}
         >
-            <h3 className="text-center text-lg font-bold text-gray-600">{course.name}</h3>
-            <p className="text-sm my-3 text-gray-500">{course.professor}</p>
-            <div className="flex justify-around mt-4">
+            <h3 className="text-[14px] font-medium text-gray-900">{course.name}</h3>
+            <p className="text-[13px] text-gray-500 mb-4">{course.professor}</p>
+            <div className="flex items-center gap-4">
                 <button 
-                    className="text-sm px-3 py-1 text-white rounded-md bg-blue-500 hover:bg-blue-400 transition-colors"
+                    className="flex items-center gap-1 text-[13px] text-gray-500 hover:text-blue-600 transition-colors"
                     onClick={() => handleEdit(course)}
                 >
-                    Edit
+                    <Pencil className="w-3.5 h-3.5" /> Edit
                 </button>
                 <button 
-                    className="text-sm px-3 py-1 text-white rounded-md bg-red-500 hover:bg-red-400 transition-colors"
+                    className="flex items-center gap-1 text-[13px] text-gray-500 hover:text-red-600 transition-colors"
                     onClick={() => handleDelete(course.id)}
                 >
-                    Delete
+                    <Trash2 className="w-3.5 h-3.5" /> Delete
                 </button>
             </div>
         </div>

@@ -1,10 +1,9 @@
 import { useState } from "react"
 import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
+import { CalendarClock } from "lucide-react";
 
- 
-
- export default function Login() {
+export default function Login() {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -25,56 +24,52 @@ import { Link, useNavigate } from "react-router-dom";
     }
 
     return (
-        <>
-            <form onSubmit={handleSubmit} className="flex h-screen items-center justify-center">
-                <div className="w-80 bg-gray-100 rounded-lg px-5 py-4">
-                    {/* <!-- login title  --> */}
-                    <h1 className="text-center text-4xl font-bold text-gray-500 my-3">Schedule Student</h1>
+        <div className="flex h-screen items-center justify-center bg-gray-50">
+            <form onSubmit={handleSubmit} className="w-80 bg-white border border-gray-200 rounded-xl px-7 py-8">
 
-                     {/* display error if the email or password invalid  */}
-                    {error && <p className="text-sm text-red-600 text-center">{error}</p>}
-
-                    <div className="my-4">
-                        {/* <!-- email  --> */}
-                        <div className="mb-3">
-                            <label className="text-sm text-gray-500 block mb-1" htmlFor="email">Email</label>
-                            <input 
-                                className="px-2 py-1 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400" 
-                                type="email" 
-                                name="email" 
-                                id="email" 
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                required
-                            />
-                        </div>
-
-                        {/* <!-- password  --> */}
-                        <div>
-                            <label className="text-sm text-gray-500 block mb-1" htmlFor="password">Password</label>
-                            <input 
-                                className="px-2 py-1 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"  
-                                type="password" 
-                                name="password" 
-                                id="password" 
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                required
-                            />
-                        </div>
-                    </div>
-
-                    {/* <!-- submit button  --> */}
-                    <button type="submit" className="w-full rounded-lg bg-blue-500 hover:bg-blue-600 active:scale-95 transition-all py-2 text-white mb-3">
-                        Login
-                    </button>
-
-                    {/* link if user dont have account  */}
-                    <p className="text-sm text-center">
-                        You dont have account <Link to="/register" className="text-blue-500 hover:text-blue-300 transition-colors">Register</Link>
-                    </p>
+                {/* logo + title */}
+                <div className="flex items-center gap-2 mb-1">
+                    <CalendarClock className="w-5 h-5 text-blue-500" />
+                    <span className="text-[15px] font-medium text-gray-900">Schedule student</span>
                 </div>
+                <p className="text-[13px] text-gray-500 mb-7">Welcome back. Log in to see your week.</p>
+
+                {error && <p className="text-sm text-red-600 mb-4">{error}</p>}
+
+                {/* email */}
+                <label className="text-[13px] text-gray-500 block mb-1" htmlFor="email">Email</label>
+                <input 
+                    className="px-3 py-2 w-full text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 mb-4" 
+                    type="email" 
+                    name="email" 
+                    id="email" 
+                    placeholder="name@school.edu"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                />
+
+                {/* password */}
+                <label className="text-[13px] text-gray-500 block mb-1" htmlFor="password">Password</label>
+                <input 
+                    className="px-3 py-2 w-full text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 mb-6"  
+                    type="password" 
+                    name="password" 
+                    id="password" 
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
+
+                <button type="submit" className="w-full rounded-md bg-blue-500 hover:bg-blue-600 active:scale-95 transition-all py-2.5 text-sm font-medium text-white mb-5">
+                    Log in
+                </button>
+
+                <p className="text-[13px] text-center text-gray-500">
+                    New here? <Link to="/register" className="text-blue-600 hover:text-blue-500 transition-colors">Create an account</Link>
+                </p>
             </form>
-        </>
+        </div>
     )
- }
+}
