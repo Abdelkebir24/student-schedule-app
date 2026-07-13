@@ -20,6 +20,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // schedules routes 
     Route::apiResource('/schedules', ScheduleController::class);
     // assignments routes 
+    Route::get('assignments/upcoming', [AssignmentController::class, 'upcoming']);
     Route::apiResource('/assignments', AssignmentController::class);
 });
 

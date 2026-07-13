@@ -92,6 +92,22 @@ class AssignmentController extends Controller
             'message' => 'Assignment deleted successfully'
         ], 200);
     }
+
+    //--------- upcoming 
+    public function upcoming(Request $request)
+    {
+        $userId = $request->user()->id;
+        $upComingAssignments = Assignment::with('course')
+                        ->where('user_id', $userId)
+                        ->where('status', 'pending')
+                        ->where('due_date', '>=', today())
+                        ->where('due_date', '<=', today()->addDays(5))
+                        ->orderBy('due_date')
+                        ->limit(5)
+                        ->get();
+
+        return response()->json($upComingAssignments, 200);
+    }
 }
 
 
