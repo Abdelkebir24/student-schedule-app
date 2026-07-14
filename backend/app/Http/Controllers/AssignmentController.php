@@ -93,23 +93,22 @@ class AssignmentController extends Controller
         ], 200);
     }
 
-    //--------- upcoming 
+    //------------- upcoming 
     public function upcoming(Request $request)
     {
         $userId = $request->user()->id;
-        $upComingAssignments = Assignment::with('course')
+        $upcomingAssignments = Assignment::with('course')
                         ->where('user_id', $userId)
                         ->where('status', 'pending')
                         ->where('due_date', '>=', today())
-                        ->where('due_date', '<=', today()->addDays(5))
+                        ->where('due_date', '<=', today()->addDays(7))
                         ->orderBy('due_date')
                         ->limit(5)
                         ->get();
 
-        return response()->json($upComingAssignments, 200);
+        return response()->json($upcomingAssignments, 200);
     }
 }
-
 
 
 

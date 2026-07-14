@@ -27,7 +27,7 @@ function Schedule() {
             setSchedules(schedulesResponse.data);
             setCourses(coursesResponse.data);
         } catch (error) {
-            console.error(error)
+            console.error(error);
         } finally {
             setLoading(false);
         }
